@@ -489,8 +489,6 @@ class GF2Matrix:
         return GF2Matrix(self.arr.T)
 
     def to_flint(self):
-        if len(self.arr.shape) == 1:
-            return flint.nmod_mat(0, 0, [int(e) for e in self.arr.flatten()], 2)
         return flint.nmod_mat(self.arr.shape[0], self.arr.shape[1], [int(e) for e in self.arr.flatten()], 2)
 
     def nullspace(self):
@@ -502,12 +500,8 @@ class GF2Matrix:
         return GF2Matrix.from_flint(X), rank
 
     def inv(self):
-        if len(self.arr.shape) == 1:
-            eye = flint.nmod_mat(0, 0,
-                                 [int(e) for e in np.eye(0, 0).flatten()], 2)
-        else:
-            eye = flint.nmod_mat(self.arr.shape[0], self.arr.shape[1],
-                                 [int(e) for e in np.eye(self.arr.shape[0], self.arr.shape[1]).flatten()], 2)
+        eye = flint.nmod_mat(self.arr.shape[0], self.arr.shape[1],
+                             [int(e) for e in np.eye(self.arr.shape[0], self.arr.shape[1]).flatten()], 2)
         return GF2Matrix.from_flint(self.to_flint().solve(eye))
 
     def inv2(self):
