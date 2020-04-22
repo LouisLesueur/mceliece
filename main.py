@@ -1,14 +1,26 @@
+"""Atk
+
+Usage:
+  main.py
+  main.py g
+"""
+
 from mceliece.mceliececipher import McElieceCipher
 import logging
 import numpy as np
 import sys
 from utils import generate, encrypt, decrypt
+from docopt import docopt
+
+
+
+args = docopt(__doc__, version='Atk')
 
 m,n,t = 6,63,8
 #m,n,t = 5,30,5
 
-# Décommenter pour générer de nouvelles clés
-#generate(m,n,t,'sk','pk')
+if args['g']:
+    generate(m,n,t,'sk','pk')
 
 
 message = b"A\n"
