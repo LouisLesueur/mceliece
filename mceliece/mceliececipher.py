@@ -58,7 +58,7 @@ class McElieceCipher:
         for b in bits_to_flip:
             Cp[b] = Cp[b].flip()
         log.debug(f"C': {Cp}")
-        return np.array(Cp)
+        return Cp
 
     def repair_errors(self, msg_arr, syndrome):
         if type(self.irr_poly) != GF2Poly:

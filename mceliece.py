@@ -44,6 +44,7 @@ def generate(m, n, t, priv_key_file, pub_key_file):
     log.info(f'Private key saved to {priv_key_file} file')
     np.savez_compressed(pub_key_file, m=m, n=n, t=t, Gp=mceliece.Gp)
     log.info(f'Public key saved to {pub_key_file} file')
+    print(mceliece.g_poly)
 
 
 def encrypt(pub_key_file, input_arr, block=False):
@@ -67,11 +68,11 @@ def encrypt(pub_key_file, input_arr, block=False):
                 log.debug(f"Padding added in block {i}")
                 next_output = np.pad(next_output, (0, mceliece.Gp.shape[1] - len(next_output)), 'constant')
             output = np.concatenate((output, next_output))
-
     return np.array(output).flatten()
 
 
 def decrypt(priv_key_file, input_arr, block=False):
+    print(input_arr)
     priv_key = np.load(priv_key_file, allow_pickle=True)
     mceliece = McElieceCipher(int(priv_key['m']), int(priv_key['n']), int(priv_key['t']))
     mceliece.S = priv_key['S']
