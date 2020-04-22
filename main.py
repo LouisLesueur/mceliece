@@ -2,27 +2,22 @@ from mceliece.mceliececipher import McElieceCipher
 import logging
 import numpy as np
 import sys
-
+from utils import generate, encrypt, decrypt
 
 m,n,t = 6,63,8
 #m,n,t = 5,30,5
 
+# Décommenter pour générer de nouvelles clés
+#generate(m,n,t,'sk','pk')
 
-mceliece = McElieceCipher(m, n, t)
-mceliece.generate_random_keys()
-mceliece.to_numpy()
 
 message = b"A\n"
 bin_message = np.unpackbits(np.frombuffer(message, dtype=np.uint8))
 bin_message = np.trim_zeros(bin_message, 'b')
-
 print("Message original", bin_message)
 
-
-
-
-cipher = mceliece.encrypt(bin_message).to_numpy()
+cipher = encrypt('pk.npz', bin_message)
 print("Message crypté : ", cipher)
 
-decipher = mceliece.decrypt(cipher)
+decipher = decrypt('sk.npz', cipher)
 print("Message décrypté :", decipher)
