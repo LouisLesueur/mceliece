@@ -3,13 +3,11 @@ import numpy as np
 
 mceliece = McElieceCipher(4, 15, 2)
 mceliece.generate_random_keys()
+mceliece.to_numpy()
 
-# Obligé car pas numpy par défaut
-mceliece.Gp = np.array(mceliece.Gp)
-mceliece.H = np.array(mceliece.H)
-mceliece.P = np.array(mceliece.P)
-mceliece.P_inv = np.array(mceliece.P_inv)
-
-cypher = mceliece.encrypt(np.array([0, 1, 0, 1, 0, 1, 0]))
-
-print(cypher)
+message = np.array([0, 1, 0, 1, 0, 1, 0])
+print("Message original", message)
+cypher = mceliece.encrypt(message)
+print("Message crypté : ", cypher)
+decipher = mceliece.decrypt(cypher)
+print("Message décrypté :", decipher)

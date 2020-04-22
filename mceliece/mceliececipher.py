@@ -37,6 +37,16 @@ class McElieceCipher:
         self.S_inv = self.S.inv()
         self.Gp = self.S * self.G * self.P
 
+    def to_numpy(self):
+        self.G = np.array(self.G)
+        self.H = np.array(self.H)
+        self.P = np.array(self.P)
+        self.P_inv = np.array(self.P_inv)
+        self.S = np.array(self.S)
+        self.S_inv = np.array(self.S_inv)
+        self.Gp = np.array(self.Gp)
+
+
     def encrypt(self, msg_arr):
         if len(msg_arr) != self.Gp.shape[0]:
             raise Exception(f"Wrong message length. Should be {self.Gp.shape[0]} bits.")
@@ -48,7 +58,7 @@ class McElieceCipher:
         for b in bits_to_flip:
             Cp[b] = Cp[b].flip()
         log.debug(f"C': {Cp}")
-        return Cp
+        return np.array(Cp)
 
     def repair_errors(self, msg_arr, syndrome):
         if type(self.irr_poly) != GF2Poly:
