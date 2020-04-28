@@ -1,7 +1,7 @@
 from mceliece.mceliececipher import McElieceCipher
 import numpy as np
 
-mceliece = McElieceCipher(4, 15, 2)
+mceliece = McElieceCipher(6, 60, 2)
 mceliece.generate_random_keys()
 
 # Obligé car pas numpy par défaut
