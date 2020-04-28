@@ -16,12 +16,15 @@ from docopt import docopt
 
 args = docopt(__doc__, version='Atk')
 
-m,n,t = 6,63,8
-#m,n,t = 5,30,5
-
 if args['g']:
+    m,n,t = 6,63,8
     generate(m,n,t,'sk','pk')
 
+
+pub_key = np.load('pk.npz', allow_pickle=True)
+m,n,t = int(pub_key['m']), int(pub_key['n']), int(pub_key['t'])
+
+print("Params: ",m,n,t)
 
 message = b"A\n"
 bin_message = np.unpackbits(np.frombuffer(message, dtype=np.uint8))

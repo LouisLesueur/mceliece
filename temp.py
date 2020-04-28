@@ -1,21 +1,29 @@
 from mceliece.mceliececipher import McElieceCipher
 import numpy as np
 import time
+import logging
+import sys
+from utils import generate, encrypt, decrypt
 
 
-m, n, t = 4, 15, 2
+pub_key = np.load('pk.npz', allow_pickle=True)
+m,n,t = int(pub_key['m']), int(pub_key['n']), int(pub_key['t'])
 
-mceliece = McElieceCipher(m, n, t)
-mceliece.generate_random_keys()
-mceliece.to_numpy()
+print("Params: ",m,n,t)
 
-message = np.array([0, 1, 0, 1, 0, 1, 0])
-print("Message original", message)
-cypher = mceliece.encrypt(message).astype('bool')
+message = b"A\n"
+bin_message = np.unpackbits(np.frombuffer(message, dtype=np.uint8))
+bin_message = np.trim_zeros(bin_message, 'b')
+print("Message original", bin_message)
+
+cipher = encrypt('pk.npz', bin_message)
+print("Message crypté : ", cipher)
+
+decipher = decrypt('sk.npz', cipher)
+print("Message décrypté :", decipher)
 
 
-
-def temp_atk(cipher, t, N, mceliece):
+def temp_atk(cipher, t, N, pk):
     """
     cipher - ciphertext
     t - t parameter of the classicmceliece
@@ -26,6 +34,7 @@ def temp_atk(cipher, t, N, mceliece):
     u = np.zeros(n)
 
     for i in range(n):
+        print(f'step: {i+1}/{n}\r', sep=' ', end='', flush=True)
         sparse = np.zeros(n)
         sparse[i] = 1
 
@@ -34,7 +43,7 @@ def temp_atk(cipher, t, N, mceliece):
 
         for j in range(N):
             starttime = time.time()
-            mceliece.decrypt(cipher_i)
+            decrypt(pk, cipher)
             endtime = time.time()
             times[j] = endtime-starttime
 
@@ -44,4 +53,4 @@ def temp_atk(cipher, t, N, mceliece):
 
     return np.array([1 if elem in M else 0 for elem in u])
 
-print(temp_atk(cypher,t,10,mceliece))
+print("Erreur trouvée par atk:", temp_atk(cipher,t,10,'sk.npz'))

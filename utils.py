@@ -72,7 +72,6 @@ def encrypt(pub_key_file, input_arr, block=False):
 
 
 def decrypt(priv_key_file, input_arr, block=False):
-    print(input_arr)
     priv_key = np.load(priv_key_file, allow_pickle=True)
     mceliece = McElieceCipher(int(priv_key['m']), int(priv_key['n']), int(priv_key['t']))
     mceliece.S = priv_key['S']
