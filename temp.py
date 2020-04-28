@@ -19,11 +19,11 @@ print("Message original", bin_message)
 cipher = encrypt('pk.npz', bin_message)
 print("Message crypté : ", cipher)
 
-decipher = decrypt('sk.npz', cipher)
+decipher = decrypt('sk.npz', cipher, verbose=True)
 print("Message décrypté :", decipher)
 
 
-def temp_atk(cipher, t, N, pk):
+def temp_atk(cipher, t, N, sk):
     """
     cipher - ciphertext
     t - t parameter of the classicmceliece
@@ -43,7 +43,7 @@ def temp_atk(cipher, t, N, pk):
 
         for j in range(N):
             starttime = time.time()
-            decrypt(pk, cipher)
+            decrypt(sk, cipher)
             endtime = time.time()
             times[j] = endtime-starttime
 
@@ -53,4 +53,5 @@ def temp_atk(cipher, t, N, pk):
 
     return np.array([1 if elem in M else 0 for elem in u])
 
-print("Erreur trouvée par atk:", temp_atk(cipher,t,10,'sk.npz'))
+err_approx = temp_atk(cipher,t,10,'sk.npz')
+print("Erreur trouvée par atk:", err_approx)
