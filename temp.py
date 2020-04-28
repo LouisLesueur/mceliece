@@ -19,7 +19,7 @@ print("Message original", bin_message)
 cipher = encrypt('pk.npz', bin_message)
 print("Message crypté : ", cipher)
 
-decipher = decrypt('sk.npz', cipher, verbose=True)
+decipher = decrypt('sk.npz', cipher)
 print("Message décrypté :", decipher)
 
 
@@ -53,5 +53,5 @@ def temp_atk(cipher, t, N, sk):
 
     return np.array([1 if elem in M else 0 for elem in u])
 
-err_approx = temp_atk(cipher,t,10,'sk.npz')
+err_approx = temp_atk(cipher,t,5,'sk.npz')
 print("Erreur trouvée par atk:", err_approx)
