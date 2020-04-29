@@ -30,12 +30,12 @@ def temp_atk(cipher, t, N, sk):
     N - number of decryption time to compute at each iteration
     """
 
-    n = cipher.shape[0]
-    u = np.zeros(n)
+    size = cipher.shape[0]
+    u = np.zeros(size)
 
-    for i in range(n):
-        print(f'step: {i+1}/{n}\r', sep=' ', end='', flush=True)
-        sparse = np.zeros(n)
+    for i in range(size):
+        print(f'step: {i+1}/{size}\r', sep=' ', end='', flush=True)
+        sparse = np.zeros(size)
         sparse[i] = 1
 
         cipher_i = np.bitwise_xor(cipher, sparse.astype('bool'))
