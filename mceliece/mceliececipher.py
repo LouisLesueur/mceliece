@@ -60,7 +60,7 @@ class McElieceCipher:
         log.debug(f"C': {Cp}")
         return Cp
 
-    def repair_errors(self, msg_arr, syndrome):
+    def repair_errors(self, msg_arr, syndrome, add_error = None):
         if type(self.irr_poly) != GF2Poly:
             self.irr_poly = GF2Poly.from_numpy(self.irr_poly)
         ring = GF2mRing(self.m, self.irr_poly)
@@ -110,6 +110,9 @@ class McElieceCipher:
 
             tau_poly = (a ** 2 + GF2mPoly.x(ring) * b ** 2)
 
+        if add_error is not None :
+            tau_poly += add_error
+
         log.debug(f'tau_poly={tau_poly}')
         test_elem = ring.one()
         for i in range(len(msg_arr)):
@@ -122,7 +125,9 @@ class McElieceCipher:
 
         return msg_arr
 
-    def decode(self, msg_arr):
+    def decode(self, msg_arr, add_error = None):
+        if type(add_error) != GF2Matrix:
+            add_error = GF2Matrix.from_list(add_error)
         if type(msg_arr) != GF2Matrix:
             msg_arr = GF2Matrix.from_list(msg_arr)
         log.debug(f'msg_len:{len(msg_arr)}')
@@ -138,7 +143,7 @@ class McElieceCipher:
 
         return GF2Matrix.from_list(D_rref[:self.G.shape[0], self.G.shape[0]:].flatten())
 
-    def decrypt(self, msg_arr):
+    def decrypt(self, msg_arr, add_error = None):
         if len(msg_arr) != self.H.shape[1]:
             raise Exception(f"Wrong message length. Should be {self.H.shape[1]} bits.")
         log.debug(f"msg: {msg_arr}")
